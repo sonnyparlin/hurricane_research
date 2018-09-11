@@ -16,13 +16,11 @@ def simple_get(url):
         log_error('Error during requests to {0} : {1}'.format(url, str(e)))
         return None
 
-
 def is_good_response(resp):
     content_type = resp.headers['Content-Type'].lower()
     return (resp.status_code == 200
             and content_type is not None
             and content_type.find('html') > -1)
-
 
 def log_error(e):
     print(e)
@@ -69,7 +67,6 @@ def collect_data(raw_str):
     
 def tokenize_and_collect(data):
     myList = data.splitlines()
-    
     myfile = open('Hurricane.txt', 'w')        
     
     for item_string in myList:
@@ -82,7 +79,6 @@ def tokenize_and_collect(data):
                 continue
             state=build_state_str(item)
             cat,name,pressure,max_winds=collect_data(item)
-            
             myfile.write("{0},{1},{2},{3},{4},{5},{6}\n".format(year,month,state,cat,pressure,max_winds,name))
             print(year,month,state,cat,pressure,max_winds,name)
         
