@@ -51,7 +51,7 @@ def collect_data(raw_str):
     cat = re.sub("[\D]","",cat)
     if cat == "":
         cat="TS"
-        
+
     name = str_list[-1]
     name = re.sub("[-\"\s]","",name)
     pressure = str_list[-3]
