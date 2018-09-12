@@ -26,7 +26,7 @@ for tr in table.find_all("tr"):
             elif pattern.match(tds[0]):
                 continue
             else:  
-                tds[1] = re.sub(",",";",tds[1])
+                tds[2] = re.sub(",",";",tds[2])
                 print("{0},{1},{2},{3},{4},{5},{6}".format(tds[0],tds[1],tds[2],tds[3],tds[4],tds[5],tds[6]))
                 myfile.write("{0},{1},{2},{3},{4},{5},{6}\n".format(tds[0],tds[1],tds[2],tds[3],tds[4],tds[5],tds[6]))
             
