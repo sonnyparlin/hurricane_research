@@ -28,6 +28,9 @@ for tr in table.find_all("tr"):
         pattern2 = re.compile("^([0-9])")
         if pattern2.match(year):
             
+            if max_wind == "980": # Fix for flaw in data from original source
+                max_wind="-----"
+            
             if "None" in month or "None" in state:
                 print("{0}|None".format(tds[0]))
                 continue
