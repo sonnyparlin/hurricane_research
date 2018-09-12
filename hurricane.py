@@ -21,6 +21,14 @@ for tr in table.find_all("tr"):
         max_wind=tds[5]
         name=tds[6]
         
+        check_cat = re.compile("[0-9]{1}")
+        if not check_cat.match(category):
+            state="{0} {1}".format(tds[2], tds[3])
+            category=tds[4]
+            pressure=tds[5]
+            max_wind=tds[6]
+            name=tds[7]
+        
         pattern = re.compile("^([0-9]{4}s)")
         if pattern.match(year):
             continue
@@ -37,6 +45,7 @@ for tr in table.find_all("tr"):
             elif pattern.match(year):
                 continue
             else:  
+                state = state.rstrip()
                 state = re.sub(",",";",state)
                 print("{0},{1},{2},{3},{4},{5},{6}".format(year,month,state,category,pressure,max_wind,name))
                 myfile.write("{0},{1},{2},{3},{4},{5},{6}\n".format(year,month,state,category,pressure,max_wind,name))
