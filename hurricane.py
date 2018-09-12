@@ -21,6 +21,12 @@ for tr in table.find_all("tr"):
         max_wind=tds[5]
         name=tds[6]
         
+        # Check if category is one numberic character
+        # If not, that means state had a newline which means
+        # there's state data in the tds[3] variable. So 
+        # now we create the state variable out of tds[2] and tds[3]. 
+        # Then we have to reassign the remaining original variables 
+        # accordingly: category, pressure, max_wind and name.
         check_cat = re.compile("[0-9]{1}")
         if not check_cat.match(category):
             state="{0} {1}".format(tds[2], tds[3])
