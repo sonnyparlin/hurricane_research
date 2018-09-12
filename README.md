@@ -5,4 +5,4 @@ The spreadsheet pulls the data from Hurricane.txt here on this github repository
 
 
 # Original Data
-http://www.aoml.noaa.gov/hrd/hurdat/All_U.S._Hurricanes-aug2011.html
+http://www.aoml.noaa.gov/hrd/tcfaq/E23.html
