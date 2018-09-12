@@ -13,22 +13,30 @@ for tr in table.find_all("tr"):
     tds=list(tr.stripped_strings)
     
     try:
+        year=tds[0]
+        month=tds[1]
+        state=tds[2]
+        category=tds[3]
+        pressure=tds[4]
+        max_wind=tds[5]
+        name=tds[6]
+        
         pattern = re.compile("^([0-9]{4}s)")
-        if pattern.match(tds[0]):
+        if pattern.match(year):
             continue
             
         pattern2 = re.compile("^([0-9])")
-        if pattern2.match(tds[0]):
+        if pattern2.match(year):
             
-            if "None" in tds[1] or "None" in tds[2]:
+            if "None" in month or "None" in state:
                 print("{0}|None".format(tds[0]))
                 continue
-            elif pattern.match(tds[0]):
+            elif pattern.match(year):
                 continue
             else:  
-                tds[2] = re.sub(",",";",tds[2])
-                print("{0},{1},{2},{3},{4},{5},{6}".format(tds[0],tds[1],tds[2],tds[3],tds[4],tds[5],tds[6]))
-                myfile.write("{0},{1},{2},{3},{4},{5},{6}\n".format(tds[0],tds[1],tds[2],tds[3],tds[4],tds[5],tds[6]))
+                state = re.sub(",",";",state)
+                print("{0},{1},{2},{3},{4},{5},{6}".format(year,month,state,category,pressure,max_wind,name))
+                myfile.write("{0},{1},{2},{3},{4},{5},{6}\n".format(year,month,state,category,pressure,max_wind,name))
             
     except IndexError:
         pass
