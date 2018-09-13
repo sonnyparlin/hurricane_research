@@ -21,6 +21,57 @@ class MyPrompt(Cmd):
         if inp == 'x' or inp == 'q':
             return self.do_exit(inp)
             
+    def do_graph_hurricanes_per_year(self,inp):
+        '''Graph the number of hurricanes per year from 1850 to present in a scatter plot'''
+        if len(h_data) == 0:
+            self.do_read_data(inp)
+        
+        years,hurricanes=[],[]    
+        for h in h_data:
+            ye,mo,st,ct,pr,ws,nm=h.split(",")
+            #if int(ye) < 1934: # option to omit data for testing purposes
+            #    print(ye)
+            #    continue
+            years.append(int(ye))
+                
+        from collections import Counter
+        num_h_per_year = Counter(years)
+        (years,hurricanes) = zip(*num_h_per_year.items()) #Convert dict to two arrays python 3
+        x=years
+        y=hurricanes
+                        
+        # Create a trace
+        data = go.Bar(
+            x = x,
+            y = y,
+            name='Hurricanes per Year'
+        )
+        
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
+        line = slope*np.asarray(x)+intercept
+        
+        annotation = go.layout.Annotation(
+            x=1974,
+            y=2.5,
+            text='Trend line',
+            showarrow=True,
+            font=go.layout.annotation.Font(size=16)
+        )
+        
+        trace2 = go.Scatter(
+            x=x,
+            y=line,
+            mode='lines',
+            marker=go.scatter.Marker(color='rgb(255, 0, 0)'),
+            name='Trendline'
+        )
+
+        layout = go.Layout(title='Hurricanes from 1850 to present',
+                           annotations=[annotation])
+                   
+        fig = go.Figure(data=[data,trace2], layout=layout)
+        py.plot(fig, filename='Hurricanes per year bar chart')
+            
     def do_graph_windspeed(self,inp):
         '''Graph the windspeeds of all hurricanes from 1850 to present in a scatter plot'''
         if len(h_data) == 0:
@@ -74,7 +125,7 @@ class MyPrompt(Cmd):
                            annotations=[annotation])
                    
         fig = go.Figure(data=[data,trace2], layout=layout)
-        py.plot(fig, filename='basic-scatter')
+        py.plot(fig, filename='Wind speed scatter plot')
     
     def do_graph_category(self,inp):
         '''Graph the average hurricane category for every 25 years from 1850 to present'''
@@ -138,7 +189,7 @@ class MyPrompt(Cmd):
             annotations=[annotation]
         )
         fig = go.Figure(data=[data,tracer], layout=layout)
-        py.plot(fig, filename='basic-bar')
+        py.plot(fig, filename='Category bar chart')
          
     def do_dump_data(self,inp):
         '''Display dump of raw data'''
