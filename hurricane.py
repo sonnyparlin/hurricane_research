@@ -81,7 +81,7 @@ class MyPrompt(Cmd):
         if len(h_data) == 0:
             self.do_read_data(inp)
             
-        c1,c2,c3,c4,c5,c6=[],[],[],[],[],[]
+        c1,c2,c3,c4,c5,c6,c7=[],[],[],[],[],[],[]
         all_ranges,ydata=[],[]
         flag=0
         for h in h_data:
@@ -94,25 +94,50 @@ class MyPrompt(Cmd):
                 c3.append(int(ct))
             elif int(ye) > 1925 and int(ye) < 1949:
                 c4.append(int(ct))
-            elif int(ye) > 1950 and int(ye) < 1999:
+            elif int(ye) > 1950 and int(ye) < 1974:
                 c5.append(int(ct))
-            elif int(ye) > 2000 and int(ye) < 2024:
+            elif int(ye) > 1975 and int(ye) < 1999:
                 c6.append(int(ct))
+            elif int(ye) > 2000 and int(ye) < 2024:   
+                c7.append(int(ct))
                 
-        all_ranges=[c1,c2,c3,c4,c5,c6]
+        all_ranges=[c1,c2,c3,c4,c5,c6,c7]
         labels=["1850-1875","1876-1899","1900-1924","1925-1949","1950-1999","2000-2024"]
+        labels_linear=[1850,1876,1900,1925,1950,1975,2000]
         for range in all_ranges:
             ydata.append(sum(range)/len(range))
+        
+        x=labels_linear
+        y=ydata
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
+        line = slope*np.asarray(x)+intercept
+        
+        tracer = go.Scatter(
+            x=x,
+            y=line,
+            mode='lines',
+            marker=go.scatter.Marker(color='rgb(255, 0, 0)'),
+            name='Trendline'
+        )
                           
-        data = [go.Bar(
-            x=labels,
-            y=ydata
-        )]
+        data = go.Bar(
+            x=x,
+            y=y
+        )
+        
+        annotation = go.layout.Annotation(
+            x=1850,
+            y=2,
+            text='Minimal Upward Trend 1.8 -> 2.0 over 150+ years',
+            showarrow=True,
+            font=go.layout.annotation.Font(size=16)
+        )
 
         layout = go.Layout(
             title='Average Hurricane category Every 25 Years',
+            annotations=[annotation]
         )
-        fig = go.Figure(data=data, layout=layout)
+        fig = go.Figure(data=[data,tracer], layout=layout)
         py.plot(fig, filename='basic-bar')
          
     def do_dump_data(self,inp):
