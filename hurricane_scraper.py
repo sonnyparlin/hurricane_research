@@ -2,7 +2,9 @@ from bs4 import BeautifulSoup
 import re
 import urllib.request
 
-def scrape_and_dump(table):
+def scrape_and_dump():
+    soup = BeautifulSoup(html, features="html.parser")
+    table = soup.find_all("table")[1]
     myfile = open('Hurricane.txt', 'w')
     
     for tr in table.find_all("tr"):
@@ -60,8 +62,6 @@ def scrape_and_dump(table):
 def main():    
     with urllib.request.urlopen("http://www.aoml.noaa.gov/hrd/tcfaq/E23.html") as url:
         html = url.read()
-    soup = BeautifulSoup(html, features="html.parser")
-    table = soup.find_all("table")[1]
-    scrape_and_dump(table)
+    scrape_and_dump
     
 main()

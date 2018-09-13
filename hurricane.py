@@ -5,6 +5,7 @@ from scipy import stats
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+from hurricane_scraper import scrape_and_dump
 
 h_data=[]
 
@@ -120,6 +121,10 @@ class MyPrompt(Cmd):
             self.do_read_data(inp)
         
         print(h_data)
+
+    def do_update_data(self,inp):
+        scrape_and_dump
+        self.dump_data
         
     def do_read_data(self, inp):
         '''Collect data for all other functions, this should run first'''
