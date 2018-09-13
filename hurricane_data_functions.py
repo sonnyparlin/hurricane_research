@@ -2,6 +2,8 @@ from cmd import Cmd
 import plotly.plotly as py
 import plotly.graph_objs as go
 from scipy import stats
+import numpy as np
+import matplotlib.pyplot as plt
 import csv
 
 h_data=[]
@@ -30,23 +32,47 @@ class MyPrompt(Cmd):
             if not "---" in ws:
                 speeds.append(int(ws))
                 hurricanes.append(int(ye))
+                
+        x=hurricanes
+        y=speeds
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
+        line = slope*np.asarray(x)+intercept
                         
         # Create a trace
         data = go.Scatter(
-            x = hurricanes,
-            y = speeds,
+            x = x,
+            y = y,
             mode = 'markers',
             marker = dict(
                 color = '#FF0000',
                 line = dict(width = 1)
-            )
+            ),
+            name='Max Wind'
+        )
+        
+        annotation = go.layout.Annotation(
+            x=1890,
+            y=90,
+            text='Slight Upward Trend',
+            showarrow=True,
+            font=go.layout.annotation.Font(size=16)
+        )
+        
+        trace2 = go.Scatter(
+            x=x,
+            y=line,
+            mode='lines',
+            marker=go.scatter.Marker(color='rgb(31, 119, 180)'),
+            name='Trendline'
         )
 
         layout = go.Layout(xaxis=dict(ticks='', showticklabels=True, zeroline=False),
                            yaxis=dict(ticks='', showticklabels=True, zeroline=False),
-                           showlegend=True, hovermode='closest', title='Wind speeds of all hurricanes from 1850 to present')
+                           showlegend=True, hovermode='closest', 
+                           title='Wind speeds of all hurricanes from 1850 to present',
+                           annotations=[annotation])
                    
-        fig = go.Figure(data=[data], layout=layout)
+        fig = go.Figure(data=[data,trace2], layout=layout)
         py.plot(fig, filename='basic-scatter')
     
     def do_category_per_qc(self,inp):
