@@ -22,7 +22,7 @@ class MyPrompt(Cmd):
             return self.do_exit(inp)
             
     def do_graph_hurricanes_per_year(self,inp):
-        '''Graph the number of hurricanes per year from 1850 to present in a scatter plot'''
+        '''Graph the number of hurricanes per year from 1850 to present in a bar graph'''
         if len(h_data) == 0:
             self.do_read_data(inp)
         
