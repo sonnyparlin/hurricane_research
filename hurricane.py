@@ -3,14 +3,13 @@ import plotly.plotly as py
 import plotly.graph_objs as go
 from scipy import stats
 import numpy as np
-import matplotlib.pyplot as plt
-import csv
+import csv, io
 from hurricane_scraper import scrape_and_dump
-
+from contextlib import redirect_stdout
 h_data=[]
 
 class MyPrompt(Cmd):
-    prompt = 'pb> '
+    prompt = 'hurricane> '
     intro = "Welcome! Type ? to list commands"
  
     def do_exit(self, inp):
@@ -36,8 +35,6 @@ class MyPrompt(Cmd):
                 
         x=hurricanes
         y=speeds
-        slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
-        line = slope*np.asarray(x)+intercept
                         
         # Create a trace
         data = go.Scatter(
@@ -51,10 +48,13 @@ class MyPrompt(Cmd):
             name='Max Wind'
         )
         
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
+        line = slope*np.asarray(x)+intercept
+        
         annotation = go.layout.Annotation(
-            x=1890,
+            x=1970,
             y=90,
-            text='Slight Upward Trend',
+            text='Minimal Upward Trend',
             showarrow=True,
             font=go.layout.annotation.Font(size=16)
         )
@@ -82,7 +82,7 @@ class MyPrompt(Cmd):
             self.do_read_data(inp)
             
         c1,c2,c3,c4,c5,c6=[],[],[],[],[],[]
-        all_ranges,data=[],[]
+        all_ranges,ydata=[],[]
         flag=0
         for h in h_data:
             ye,mo,st,ct,pr,ws,nm=h.split(",")
@@ -102,11 +102,11 @@ class MyPrompt(Cmd):
         all_ranges=[c1,c2,c3,c4,c5,c6]
         labels=["1850-1875","1876-1899","1900-1924","1925-1949","1950-1999","2000-2024"]
         for range in all_ranges:
-            data.append(sum(range)/len(range))
+            ydata.append(sum(range)/len(range))
                           
         data = [go.Bar(
             x=labels,
-            y=data
+            y=ydata
         )]
 
         layout = go.Layout(
@@ -123,8 +123,17 @@ class MyPrompt(Cmd):
         print(h_data)
 
     def do_update_data(self,inp):
-        scrape_and_dump
-        self.dump_data
+        '''Re-scrape data from original web source and rebuild csv file, 
+this should only be done every so often, the data doesn't change much.'''
+        f = io.StringIO()
+        with redirect_stdout(f):
+            scrape_and_dump()
+        print(f.getvalue())
+        
+    def do_clear_data(self,inp):
+        '''Clear data from memory'''
+        h_data=[]
+        print(h_data)
         
     def do_read_data(self, inp):
         '''Collect data for all other functions, this should run first'''

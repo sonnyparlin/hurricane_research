@@ -1,8 +1,17 @@
 from bs4 import BeautifulSoup
 import re
 import urllib.request
+import sys
 
 def scrape_and_dump():
+    failed=0
+    try:
+        with urllib.request.urlopen("http://www.aoml.noaa.gov/hrd/tcfaq/E23.html") as url:
+            html = url.read()
+    except urllib.error.HTTPError as e:
+        sys.stdout.write("Error connecting to website {}\n".format(e))
+        return
+        
     soup = BeautifulSoup(html, features="html.parser")
     table = soup.find_all("table")[1]
     myfile = open('Hurricane.txt', 'w')
@@ -51,7 +60,7 @@ def scrape_and_dump():
                 else:  
                     state = state.rstrip()
                     state = re.sub(",",";",state)
-                    print("{0},{1},{2},{3},{4},{5},{6}".format(year,month,state,category,pressure,max_wind,name))
+                    sys.stdout.write("{0},{1},{2},{3},{4},{5},{6}\n".format(year,month,state,category,pressure,max_wind,name))
                     myfile.write("{0},{1},{2},{3},{4},{5},{6}\n".format(year,month,state,category,pressure,max_wind,name))
             
         except IndexError:
@@ -59,9 +68,5 @@ def scrape_and_dump():
     
     myfile.close()
 
-def main():    
-    with urllib.request.urlopen("http://www.aoml.noaa.gov/hrd/tcfaq/E23.html") as url:
-        html = url.read()
-    scrape_and_dump
-    
-main()
+if __name__ == "__main__":
+    scrape_and_dump()
