@@ -1,6 +1,7 @@
 from cmd import Cmd
 import plotly.plotly as py
 import plotly.graph_objs as go
+from scipy import stats
 import csv
 
 h_data=[]
@@ -17,6 +18,36 @@ class MyPrompt(Cmd):
     def default(self, inp):
         if inp == 'x' or inp == 'q':
             return self.do_exit(inp)
+            
+    def do_windspeed_by_year(self,inp):
+        '''Graph the windspeeds of all hurricanes from 1850 to present in a scatter plot'''
+        if len(h_data) == 0:
+            self.do_read_data(inp)
+        
+        speeds,hurricanes=[],[]    
+        for h in h_data:
+            ye,mo,st,ct,pr,ws,nm=h.split(",")
+            if not "---" in ws:
+                speeds.append(int(ws))
+                hurricanes.append(int(ye))
+                        
+        # Create a trace
+        data = go.Scatter(
+            x = hurricanes,
+            y = speeds,
+            mode = 'markers',
+            marker = dict(
+                color = '#FF0000',
+                line = dict(width = 1)
+            )
+        )
+
+        layout = go.Layout(xaxis=dict(ticks='', showticklabels=True, zeroline=False),
+                           yaxis=dict(ticks='', showticklabels=True, zeroline=False),
+                           showlegend=True, hovermode='closest', title='Wind speeds of all hurricanes from 1850 to present')
+                   
+        fig = go.Figure(data=[data], layout=layout)
+        py.plot(fig, filename='basic-scatter')
     
     def do_category_per_qc(self,inp):
         '''Graph the average hurricane category for every 25 years from 1850 to present'''
@@ -45,13 +76,12 @@ class MyPrompt(Cmd):
         labels=["1850-1875","1876-1899","1900-1924","1925-1949","1950-1999","2000-2024"]
         for range in all_ranges:
             data.append(sum(range)/len(range))
-        
+                          
         data = [go.Bar(
-                    x=labels,
-                    y=data
-            )]
+            x=labels,
+            y=data
+        )]
 
-        
         layout = go.Layout(
             title='Average Hurricane category Every 25 Years',
         )
