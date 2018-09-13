@@ -11,11 +11,20 @@ h_data=[]
 class MyPrompt(Cmd):
     prompt = 'hurricane> '
     intro = "Welcome! Type ? to list commands"
- 
+    
+    __hiden_methods = ('do_EOF')    
+    def get_names(self):
+        return [n for n in dir(self.__class__) if n not in self.__hiden_methods]
+     
     def do_exit(self, inp):
         '''exit the application. Shorthand: x q Ctrl-D.'''
         print("Bye")
         return True
+        
+    do_EOF = do_exit
+        
+    def emptyline(self):
+        pass
       
     def default(self, inp):
         if inp == 'x' or inp == 'q':
@@ -196,7 +205,16 @@ class MyPrompt(Cmd):
         if len(h_data) == 0:
             self.do_read_data(inp)
         
-        print(h_data)
+        csv_reader = csv.reader(h_data, delimiter=',')
+        for row in csv_reader:
+            year=row[0]
+            month=row[1]
+            state_data=row[2]
+            category=row[3]
+            pressure=row[4]
+            max_wind=row[5]
+            name=row[6]
+            print("{},{},{},{},{},{},{}".format(year,month,state_data,category,pressure,max_wind,name))
 
     def do_update_data(self,inp):
         '''Re-scrape data from original web source and rebuild csv file, 
