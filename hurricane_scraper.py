@@ -14,7 +14,7 @@ def scrape_and_dump():
         
     soup = BeautifulSoup(html, features="html.parser")
     table = soup.find_all("table")[1]
-    myfile = open('Hurricane.txt', 'w')
+    myfile = open('Hurricane.csv', 'w')
     
     for tr in table.find_all("tr"):
         tds=list(tr.stripped_strings)

@@ -213,7 +213,7 @@ this should only be done every so often, the data doesn't change much.'''
         
     def do_read_data(self, inp):
         '''Collect data for all other functions, this should run first'''
-        with open('Hurricane.txt') as csv_file:
+        with open('Hurricane.csv') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             for row in csv_reader:
                 year=row[0]
