@@ -21,7 +21,7 @@ class MyPrompt(Cmd):
         if inp == 'x' or inp == 'q':
             return self.do_exit(inp)
             
-    def do_windspeed_by_year(self,inp):
+    def do_graph_windspeed(self,inp):
         '''Graph the windspeeds of all hurricanes from 1850 to present in a scatter plot'''
         if len(h_data) == 0:
             self.do_read_data(inp)
@@ -76,7 +76,7 @@ class MyPrompt(Cmd):
         fig = go.Figure(data=[data,trace2], layout=layout)
         py.plot(fig, filename='basic-scatter')
     
-    def do_category_per_qc(self,inp):
+    def do_graph_category(self,inp):
         '''Graph the average hurricane category for every 25 years from 1850 to present'''
         if len(h_data) == 0:
             self.do_read_data(inp)
