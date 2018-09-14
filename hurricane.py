@@ -29,9 +29,41 @@ class MyPrompt(Cmd):
     def default(self, inp):
         if inp == 'x' or inp == 'q':
             return self.do_exit(inp)
+    
+    def do_average_windspeed(self, inp):
+        '''Graph average windspeed of U.S. landfall hurricanes per year from 1850 to present'''
+        if len(h_data) == 0:
+            self.do_read_data(inp)
+        
+        speeds=[]    
+        for h in h_data:
+            ye,mo,st,ct,pr,ws,nm=h.split(",")
+            #if int(ye) < 1934: # option to omit data for testing purposes
+            #    print(ye)
+            #    continue
+            if not "---" in ws:
+                speeds.append(int(ws))
+            
+        print(sum(speeds) / len(speeds))
+
+    def do_average_category(self, inp):
+        '''Get average category of U.S. landfall hurricanes per year from 1850 to present'''
+        if len(h_data) == 0:
+            self.do_read_data(inp)
+        
+        cats=[]    
+        for h in h_data:
+            ye,mo,st,ct,pr,ws,nm=h.split(",")
+            #if int(ye) < 1934: # option to omit data for testing purposes
+            #    print(ye)
+            #    continue
+            if not "---" in ws:
+                cats.append(int(ct))
+            
+        print(sum(cats) / len(cats))
             
     def do_graph_hurricanes_per_year(self,inp):
-        '''Graph the number of hurricanes per year from 1850 to present in a bar graph'''
+        '''Graph the number of U.S. landfall hurricanes per year from 1850 to present in a bar graph'''
         if len(h_data) == 0:
             self.do_read_data(inp)
         
