@@ -67,6 +67,39 @@ def scrape_and_dump():
             pass
     
     myfile.close()
+    
+def scrape_and_dump_sf():
+    try:
+        with urllib.request.urlopen("file:///Users/sonnyparlin/Documents/Development/hurricane_research/stormfax_data_fixed_html.html") as url:
+            html = url.read()
+    except urllib.error.HTTPError as e:
+        sys.stdout.write("Error connecting to website {}\n".format(e))
+        return
+        
+    soup = BeautifulSoup(html, features="html.parser")
+    table = soup.find_all("table")[0]
+    myfile = open('stormfax_list.csv', 'w')
+    
+    for tr in list(table.find_all("tr")):
+        tds=list(tr.stripped_strings)
+        
+        try:
+            if tds[0] == 'Year' or tds[0] == 'Average':
+                continue
+            #print(tds)
+            year=tds[0]
+            num_s=tds[1]
+            num_h=tds[2]
+            num_mh=tds[3]
 
-if __name__ == "__main__":
-    scrape_and_dump()
+            sys.stdout.write("{0},{1},{2},{3}\n".format(year,num_s,num_h,num_mh))
+            myfile.write("{0},{1},{2},{3}\n".format(year,num_s,num_h,num_mh))
+
+        except IndexError:
+            pass
+
+    myfile.close()
+
+#if __name__ == "__main__":
+    #scrape_and_dump()
+    #scrape_and_dump_sf()
