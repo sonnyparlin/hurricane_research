@@ -32,41 +32,9 @@ class MyPrompt(Cmd):
         if inp == 'x' or inp == 'q':
             return self.do_exit(inp)
     
-    '''
-    def do_average_windspeed(self, inp):
-        if len(h_data) == 0:
-            self.do_read_h_data(inp)
-        
-        speeds=[]    
-        for h in h_data:
-            ye,mo,st,ct,pr,ws,nm=h.split(",")
-            #if int(ye) < 1934: # option to omit data for testing purposes
-            #    print(ye)
-            #    continue
-            if not "---" in ws:
-                speeds.append(int(ws))
-            
-        print(sum(speeds) / len(speeds))
-
-    def do_average_category(self, inp):
-        if len(h_data) == 0:
-            self.do_read_h_data(inp)
-        
-        cats=[]    
-        for h in h_data:
-            ye,mo,st,ct,pr,ws,nm=h.split(",")
-            #if int(ye) < 1934: # option to omit data for testing purposes
-            #    print(ye)
-            #    continue
-            if not "---" in ws:
-                cats.append(int(ct))
-            
-        print(sum(cats) / len(cats))
-    '''
-    
-    # Number of storms per year according to http://www.stormfax.com/huryear.htm
+    # Number of storms per year according to http://www.aoml.noaa.gov/hrd/hurdat/comparison_table.html
     def do_graph_storms_per_year(self,inp):
-        '''Graph the number of storms per year via stormfax data in a bar graph'''
+        '''Graph the number of storms per year via http://www.aoml.noaa.gov/hrd/hurdat/comparison_table.html'''
         if len(ace_data) == 0:
             self.do_read_ace_data(inp)
         
@@ -229,7 +197,7 @@ class MyPrompt(Cmd):
         
     
     def do_graph_category(self,inp):
-        '''Graph the average hurricane category for every 25 years from 1850 to present'''
+        '''Graph of hurricane categories from 1850 to present'''
         if len(h_data) == 0:
             self.do_read_h_data(inp)
             
@@ -346,8 +314,8 @@ this should only be done every so often, the data doesn't change much.'''
         #self.do_dump_ace_data(inp)
 
     def do_update_ace_data(self,inp):
-        '''Re-scrape data from original web (stormfax) source and rebuild csv file, 
-this should only be done every so often, the data doesn't change much.'''
+        '''Re-scrape data from original web source http://www.aoml.noaa.gov/hrd/hurdat/comparison_table.html
+and rebuild csv file, this should only be done every so often, the data doesn't change much.'''
         f = io.StringIO()
         with redirect_stdout(f):
             hurricane_scraper.scrape_and_dump_ace()
@@ -368,7 +336,7 @@ this should only be done every so often, the data doesn't change much.'''
             print("{},{},{},{},{}".format(year,num_storms,num_hurricanes,num_maj_hurricanes,ace))
 
     def do_clear_ace_data(self,inp):
-        '''Clear stormfax data from memory'''
+        '''Clear ace data from memory'''
         ace_data=[]
         print(ace_data)
  
