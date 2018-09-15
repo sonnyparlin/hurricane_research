@@ -68,38 +68,40 @@ def scrape_and_dump():
     
     myfile.close()
     
-def scrape_and_dump_sf():
+def scrape_and_dump_ace():
     try:
-        with urllib.request.urlopen("file:///Users/sonnyparlin/Documents/Development/hurricane_research/stormfax_data_fixed_html.html") as url:
+        with urllib.request.urlopen("http://www.aoml.noaa.gov/hrd/hurdat/comparison_table.html") as url:
             html = url.read()
     except urllib.error.HTTPError as e:
         sys.stdout.write("Error connecting to website {}\n".format(e))
         return
         
     soup = BeautifulSoup(html, features="html.parser")
-    table = soup.find_all("table")[0]
-    myfile = open('stormfax_list.csv', 'w')
-    
+    table = soup.find_all("table")[1]
+    myfile = open('ace_data.csv', 'w')
     for tr in list(table.find_all("tr")):
         tds=list(tr.stripped_strings)
         
-        try:
-            if tds[0] == 'Year' or tds[0] == 'Average':
-                continue
-            #print(tds)
-            year=tds[0]
-            num_s=tds[1]
-            num_h=tds[2]
-            num_mh=tds[3]
+        
+        pattern = re.compile("(^[0-9]{4})")
+        if pattern.match(tds[0]):
+        
+            try:            
+                year=tds[0]
+                num_s=tds[2]
+                num_h=tds[4]
+                num_mh=tds[6]
+                ace=tds[8]
 
-            sys.stdout.write("{0},{1},{2},{3}\n".format(year,num_s,num_h,num_mh))
-            myfile.write("{0},{1},{2},{3}\n".format(year,num_s,num_h,num_mh))
+                sys.stdout.write("{0},{1},{2},{3},{4}\n".format(year,num_s,num_h,num_mh,ace))
+                myfile.write("{0},{1},{2},{3},{4}\n".format(year,num_s,num_h,num_mh,ace))
 
-        except IndexError:
-            pass
+            except IndexError:
+                pass
 
     myfile.close()
 
 #if __name__ == "__main__":
     #scrape_and_dump()
     #scrape_and_dump_sf()
+    #scrape_and_dump_ace()
