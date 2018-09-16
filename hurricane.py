@@ -6,9 +6,12 @@ import numpy as np
 import csv, io
 import hurricane_scraper
 from contextlib import redirect_stdout
+import hurdat
+
 h_data=[]
 sf_data=[]
 ace_data=[]
+hurdat_data=[]
 
 class MyPrompt(Cmd):
     prompt = 'hurricane> '
@@ -76,7 +79,7 @@ class MyPrompt(Cmd):
         
             
     def do_graph_windspeed(self,inp):
-        '''Graph the windspeeds of all hurricanes from 1850 to present in a scatter plot'''
+        '''Graph the windspeeds of all hurricanes after landfall from 1850 to present in a scatter plot'''
         if len(h_data) == 0:
             self.do_read_h_data(inp)
         
@@ -128,7 +131,7 @@ class MyPrompt(Cmd):
         layout = go.Layout(xaxis=dict(ticks='', showticklabels=True, zeroline=False),
                            yaxis=dict(ticks='', showticklabels=True, zeroline=False),
                            showlegend=True, hovermode='closest', 
-                           title='Wind speeds of all hurricanes from 1850 to present',
+                           title='Wind speeds of all hurricanes after landfall from 1850 to present',
                            annotations=[annotation])
                    
         fig = go.Figure(data=[data,trace2], layout=layout)
@@ -160,7 +163,7 @@ class MyPrompt(Cmd):
                 color = '#FF0000',
                 size=ace,
                 sizemode='area',
-                sizeref=2.*max(ace)/(100.**2),
+                sizeref=2.*max(ace)/(60.**2),
                 sizemin=4,
                 line = dict(width = 2)
             ),
@@ -194,6 +197,75 @@ class MyPrompt(Cmd):
                    
         fig = go.Figure(data=[data,trace2], layout=layout)
         py.plot(fig, filename='Ace index scatter plot')
+        
+        
+    def do_graph_ri(self,inp):
+        '''Graph of hurricane RI indexes from 1850 to present derived from https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2017-050118.txt'''
+        if len(hurdat_data) == 0:
+            self.do_read_hurdat_data(inp)
+            
+        hid,name,year=[],[],[]
+        flag=0
+        for h in hurdat_data:
+            hi,nm,ye=h.split(",")
+            year.append(int(ye))
+                    
+        x=year
+        
+        data = go.Histogram(
+            histfunc = "count",
+            x=x
+        )
+        
+        layout = go.Layout(
+            title='Hurricane RI index derived from https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2017-050118.txt',
+            bargap=0.1
+        )
+        fig = go.Figure(data=[data], layout=layout)
+        py.plot(fig, filename='RI Index Histogram')
+        
+    def do_graph_ri_bubble(self,inp):
+        '''Graph of hurricane RI indexes from 1850 to present derived from https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2017-050118.txt'''
+        if len(hurdat_data) == 0:
+            self.do_read_hurdat_data(inp)
+            
+        hid,name,year=[],[],[]
+        flag=0
+        tx=[]        
+        my_dict = {i:hurdat_data.count(i) for i in hurdat_data}
+        storm,ri=[],[]
+        for key,val in my_dict.items():
+            ri.append(val)
+            a,b,c=key.split(",")
+            storm.append(c)
+            tx.append("Hurricane {}\nYear {}".format(b,c))
+            
+        
+        x=storm
+        y=ri
+        
+        data = go.Scatter(
+            x = x,
+            y = y,
+            text=tx,
+            mode = 'markers',
+            marker = dict(
+                color = '#FF0000',
+                size=y,
+                sizemode='area',
+                sizeref=2.*max(y)/(50.**2),
+                sizemin=4,
+                line = dict(width = 2)
+            ),
+            name='Category index'
+        )
+        
+        layout = go.Layout(
+            title='Number of Rapid Intensifications per hurricane noaa.gov',
+            bargap=0.1
+        )
+        fig = go.Figure(data=[data], layout=layout)
+        py.plot(fig, filename='RI Bubble chart')
         
     
     def do_graph_category(self,inp):
@@ -320,6 +392,44 @@ and rebuild csv file, this should only be done every so often, the data doesn't 
         with redirect_stdout(f):
             hurricane_scraper.scrape_and_dump_ace()
         print(f.getvalue())
+        
+    def do_update_hurdat_data(self,inp):
+        '''Re-scrape data from original web source https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2017-050118.txt
+and rebuild csv file, this should only be done every so often, the data doesn't change much.'''
+        f = io.StringIO()
+        with redirect_stdout(f):
+            hurdat.update_hurdat()
+        print(f.getvalue())
+        
+    def do_build_ri(self,inp):
+        '''Re-scrape data from original web source https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2017-050118.txt
+and rebuild csv file, this should only be done every so often, the data doesn't change much.'''
+        f = io.StringIO()
+        with redirect_stdout(f):
+            hurdat.build_ri_index()
+        print(f.getvalue())
+
+    def do_read_hurdat_data(self, inp):
+        '''Collect data from hurdat_data.csv for functions on that dataset'''
+        with open('hurdat_data.csv') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for row in csv_reader:
+                h_id=row[0]
+                name=row[1]
+                year=row[2]
+                hurdat_data.append("{},{},{}".format(h_id,name,year))
+
+    def do_dump_hurdat_data(self,inp):
+        '''Display dump of hurdat RI indexes'''
+        if len(hurdat_data) == 0:
+            self.do_read_hurdat_data(inp)
+    
+        csv_reader = csv.reader(hurdat_data, delimiter=',')
+        for row in csv_reader:
+            h_id=row[0]
+            name=row[1]
+            year=row[2]
+            print("{},{},{}".format(h_id,name,year))
 
     def do_dump_ace_data(self,inp):
         '''Display dump of raw data'''
