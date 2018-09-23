@@ -7,6 +7,7 @@ import csv, io
 import hurricane_scraper
 from contextlib import redirect_stdout
 import hurdat
+from functools import reduce
 
 h_data=[]
 sf_data=[]
