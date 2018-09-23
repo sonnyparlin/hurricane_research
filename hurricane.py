@@ -320,7 +320,7 @@ class MyPrompt(Cmd):
         )
 
         layout = go.Layout(
-            title='Hurricane category historical data',
+            title='Hurricane category historical data for continental U.S. landfalling hurricanes',
             annotations=[annotation]
         )
         fig = go.Figure(data=[data,tracer], layout=layout)
