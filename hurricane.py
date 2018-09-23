@@ -72,8 +72,14 @@ class MyPrompt(Cmd):
             name='Major Hurricanes'
         )
         
-        layout = go.Layout(title='Storms from 1850 to present',
-                           barmode="stack")
+        layout = go.Layout(
+            autosize=False,
+            width=1000,
+            height=500,
+            showlegend=True,
+            title='Storms from 1850 to present',
+            barmode="stack"
+        )
                    
         fig = go.Figure(data=[mh_hurricanesL,hurricanesL,stormL], layout=layout)
         py.plot(fig, filename='Storms per year line chart')
@@ -129,11 +135,25 @@ class MyPrompt(Cmd):
             name='Trendline'
         )
 
-        layout = go.Layout(xaxis=dict(ticks='', showticklabels=True, zeroline=False),
-                           yaxis=dict(ticks='', showticklabels=True, zeroline=False),
-                           showlegend=True, hovermode='closest', 
-                           title='Wind speeds of all hurricanes after landfall from 1850 to present',
-                           annotations=[annotation])
+        layout = go.Layout(
+            xaxis = dict(
+                ticks='', 
+                showticklabels=True, 
+                zeroline=False
+            ),  
+            yaxis = dict(
+                ticks='', 
+                showticklabels=True, 
+                zeroline=False
+            ),
+            autosize=False,
+            width=1000,
+            height=500,
+            showlegend=True, 
+            hovermode='closest', 
+            title='Wind speeds of all hurricanes after landfall from 1850 to present',
+            annotations=[annotation]
+        )
                    
         fig = go.Figure(data=[data,trace2], layout=layout)
         py.plot(fig, filename='Wind speed scatter plot')
@@ -190,11 +210,25 @@ class MyPrompt(Cmd):
             name='Trendline'
         )
 
-        layout = go.Layout(xaxis=dict(ticks='', showticklabels=True, zeroline=False),
-                           yaxis=dict(ticks='', showticklabels=True, zeroline=False),
-                           showlegend=True, hovermode='closest', 
-                           title='Accumulated Cyclone Energy from 1850 to present',
-                           annotations=[annotation])
+        layout = go.Layout(
+            autosize=False,
+            width=1000,
+            height=500,
+            xaxis = dict(
+                ticks='', 
+                showticklabels=True, 
+                zeroline=False
+            ),
+            yaxis=dict(
+                ticks='', 
+                showticklabels=True, 
+                zeroline=False
+            ),
+            showlegend=True, 
+            hovermode='closest', 
+            title='Accumulated Cyclone Energy from 1850 to present',
+            annotations=[annotation]
+        )
                    
         fig = go.Figure(data=[data,trace2], layout=layout)
         py.plot(fig, filename='Ace index scatter plot')
@@ -219,6 +253,9 @@ class MyPrompt(Cmd):
         )
         
         layout = go.Layout(
+            autosize=False,
+            width=1000,
+            height=500,
             title='Hurricane RI index derived from https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2017-050118.txt',
             bargap=0.1
         )
@@ -262,6 +299,9 @@ class MyPrompt(Cmd):
         )
         
         layout = go.Layout(
+            autosize=False,
+            width=1000,
+            height=500,
             title='Number of Rapid Intensifications per hurricane noaa.gov',
             bargap=0.1
         )
@@ -308,7 +348,7 @@ class MyPrompt(Cmd):
                 sizemin=4,
                 line = dict(width = 2)
             ),
-            name='Category index'
+            name='Category index',
         )
         
         annotation = go.layout.Annotation(
@@ -320,7 +360,13 @@ class MyPrompt(Cmd):
         )
 
         layout = go.Layout(
+            autosize=False,
+            width=1000,
+            height=500,
             title='Hurricane category historical data for continental U.S. landfalling hurricanes',
+            yaxis = dict(
+                tickformat=',d'
+            ),
             annotations=[annotation]
         )
         fig = go.Figure(data=[data,tracer], layout=layout)
