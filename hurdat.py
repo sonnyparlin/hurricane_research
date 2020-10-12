@@ -25,7 +25,7 @@ def build_ri_index():
         for row in csv_reader:
             i+=1
             if len(row) == 4:
-                # we hit anew row, clear the data
+                # we hit anew row, clear the data.
                 name="{},{}".format(row[0].strip(),row[1].strip())
                 date=row[0][4:9]
                 name_date_string = "{},{}".format(name.strip(),date)
