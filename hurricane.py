@@ -54,7 +54,7 @@ class MyPrompt(Cmd):
         y=storms
 
         # Create a trace
-        stormL = go.Bar (
+        stormL = go.Bar(
             x = x,
             y = y,
             name='Storms'
