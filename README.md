@@ -1,3 +1,7 @@
+# Note
+SOme of the files used to generate data have been moved by noaa but they are available via the web archive wayback machine.
+http://www.aoml.noaa.gov/hrd/tcfaq/E23.html has been moved but can still be accessed here: https://web.archive.org/web/20190405010652/http://www.aoml.noaa.gov/hrd/tcfaq/E23.html
+
 # Hurricane Research
 hurricane.py is a program for analyzing hurricane data from noaa.gov
 Data output as plotly graphs located here:
