@@ -6,7 +6,7 @@ Data output as plotly graphs located here:
 
 # Original Data
 * https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2017-050118.txt (Atlantic hurricane database (HURDAT2) 1851-2017)
-* http://www.aoml.noaa.gov/hrd/hurdat/comparison_table.html (North Atlantic Hurricane Basin (1851-2017) with ACE data)
+* http://www.aoml.noaa.gov/hrd/hurdat/comparison_table.html (North Atlantic Hurricane Basin with ACE data)
 * https://www.aoml.noaa.gov/hrd/hurdat/All_U.S._Hurricanes.html (complete list of continental U.S. landfalling hurricanes)
 
 # What is ACE?
