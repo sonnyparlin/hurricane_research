@@ -5,7 +5,7 @@ Data output as plotly graphs located here:
 * https://plot.ly/~sonnyjitsu/
 
 # Original Data
-* https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2017-050118.txt (Atlantic hurricane database (HURDAT2) 1851-2017)
+* https://www.nhc.noaa.gov/data/hurdat/ Atlantic hurricane database (HURDAT2)
 * http://www.aoml.noaa.gov/hrd/hurdat/comparison_table.html (North Atlantic Hurricane Basin with ACE data)
 * https://www.aoml.noaa.gov/hrd/hurdat/All_U.S._Hurricanes.html (complete list of continental U.S. landfalling hurricanes)
 
