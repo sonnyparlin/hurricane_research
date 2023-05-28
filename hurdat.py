@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 def update_hurdat():
     try:
-        with urllib.request.urlopen("https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2017-050118.txt") as url:
+        with urllib.request.urlopen("https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2022-050423.txt") as url:
             html = url.read()
     except urllib.error.HTTPError as e:
         sys.stdout.write("Error connecting to website {}\n".format(e))
